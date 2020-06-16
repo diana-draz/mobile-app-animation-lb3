@@ -47,14 +47,6 @@ public class FragmentShow extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        adapter.notifyItemRangeChanged(0, this.notesManager.getItems().size());
-    }
-
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -69,6 +61,11 @@ public class FragmentShow extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void refresh() {
+        if (adapter != null)
+            adapter.notifyItemRangeChanged(0, this.notesManager.getItems().size());
     }
 
     public interface OnFragmentInteractionListener {

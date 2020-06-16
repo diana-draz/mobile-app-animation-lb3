@@ -80,6 +80,7 @@ public class FragmentDelete extends Fragment implements View.OnClickListener {
             try {
                 this.notesManager.delete(id);
                 _idEditText.setText("");
+                Toast.makeText(getActivity(), "Заметка успешно удалена.", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Произошла ошибка при удалении", Toast.LENGTH_SHORT).show();
             }

@@ -60,22 +60,29 @@ public class NotesManager {
                 .delete("items", "id =  " + String.valueOf(id), null);
     }
 
-    public void upsert(Note note) {
+    public void insert(Note note) {
 
         ContentValues cv = new ContentValues();
         cv.put("title", note.title);
+        cv.put("id", note.id);
+        db.getWritableDatabase().insert(
+                "items",
+                null,
+                cv);
 
+    }
 
-        if (note.id == 0) {
-            db.getWritableDatabase().insert("items", null, cv);
-        } else {
-            cv.put("id", note.id );
-            db.getWritableDatabase().update(
-                    "items",
-                    cv,
-                    "id = "+String.valueOf(note.id),
-                    null);
-        }
+    public void update(Note note) {
+
+        ContentValues cv = new ContentValues();
+        cv.put("title", note.title);
+        cv.put("id", note.id);
+        db.getWritableDatabase().update(
+                "items",
+                cv,
+                "id = " + String.valueOf(note.id),
+                null);
+
     }
 
     public List<Note> getItems(String searchText) {

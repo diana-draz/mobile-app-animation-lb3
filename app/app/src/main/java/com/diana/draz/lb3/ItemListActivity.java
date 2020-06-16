@@ -32,15 +32,17 @@ import java.util.List;
  * item details side-by-side using two vertical panes.
  */
 public class ItemListActivity extends AppCompatActivity
-        implements FragmentDelete.OnFragmentInteractionListener, FragmentShow.OnFragmentInteractionListener, FragmentInsert.OnFragmentInteractionListener, FragmentUpdate.OnFragmentInteractionListener
-        {
+        implements FragmentDelete.OnFragmentInteractionListener,
+        FragmentShow.OnFragmentInteractionListener, FragmentInsert.OnFragmentInteractionListener, FragmentUpdate.OnFragmentInteractionListener, ViewPager.OnPageChangeListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private ViewPager pager;
     private boolean mTwoPane;
-            private NotesManager notesManager;
+    private NotesManager notesManager;
+    private NotesPagerAdapter pagerAdapter;
 
             @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +70,9 @@ public class ItemListActivity extends AppCompatActivity
 
         if (mTwoPane) {
         } else {
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            NotesPagerAdapter pagerAdapter = new NotesPagerAdapter(getSupportFragmentManager(), this.notesManager);
+            pager = (ViewPager) findViewById(R.id.pager);
+            pager.addOnPageChangeListener(this);
+            pagerAdapter = new NotesPagerAdapter(getSupportFragmentManager(), this.notesManager);
             pager.setAdapter(pagerAdapter);
         }
     }
@@ -77,9 +80,27 @@ public class ItemListActivity extends AppCompatActivity
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
-
     @Override
     public void onFragmentInteraction(Uri uri) {}
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        ((FragmentShow)pagerAdapter.getItem(0)).refresh();
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+        ((FragmentShow)pagerAdapter.getItem(0)).refresh();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+        ((FragmentShow)pagerAdapter.getItem(0)).refresh();
+
+    }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
